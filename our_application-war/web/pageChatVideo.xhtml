@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+        <script src="http://simplewebrtc.com/latest.js"></script>
+    </h:head>
+    <h:body>
+        <h:outputStylesheet library="css" name="chatVideo.css"  />
+        <!--toolbar-->
+        <h:form id="form1">     
+            <p:growl id="messages" showDetail="true" />
+            <p:toolbar style="background-color: #6da7e0;">
+                <f:facet name="left">
+                    <p:commandButton  value="Revenir sur mon canal"  actionListener="#{controllerCanal.revenirSurMonCanal}" ajax="false" id="revenirSurMonCanal" style="background-color: #0D5C98; color: #fcf4f4;"/>
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+                    
+                    <p:commandButton  value="Connectés sur ce canal"  actionListener="#{controllerCanal.accesALaPageDesConnectesActionListenner}" ajax="false" id="connectes" style="background-color: #0D5C98; color: #fcf4f4;"/>
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+
+                    <p:commandButton  value="Joindre un autre canal" actionListener="#{controllerCanal.rejoindreUnAutreCanal}" ajax="false" id="listeCanaux" style="background-color: #0D5C98; color: #fcf4f4;" />
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+                </f:facet>
+
+                <f:facet name="right" >
+                    <p:menuButton  value="#{controllerCanal.membrePossesseurDeLeSessionHttp.userName}" style="background-color: #fcf4f4;">
+                        <p:menuitem value="Se déconnecter" actionListener="#{logoutController.logoutAndMessage}" update="messages" icon="fa-sign-out" />
+                        <p:menuitem value="Messages envoyés"  update="form1" icon="fa-envelope-square" actionListener="#{controllerCanal.trouverMessagesEnvoyes}" oncomplete="PF('messagesEnvoyesDialog').show()"/>
+                        <p:menuitem value="Messages reçus"  update="form1" icon="fa-envelope-square" actionListener="#{controllerCanal.trouverMessagesRecus}" oncomplete="PF('messagesRecusDialog').show()" />
+                    </p:menuButton>
+                </f:facet>
+
+            </p:toolbar>
+
+            <!--dilog qui affiche la liste des messages envoyés-->
+            <p:dialog header="Messages envoyés" widgetVar="messagesEnvoyesDialog" modal="false" showEffect="fade" hideEffect="fade" resizable="false" width="400" closeOnEscape="true" position="right,top" style="margin-right: 20px; margin-top: 20px;">
+                <p:dataList value="#{controllerCanal.messagesEnvoyes}" var="message" type="unordered" itemType="none"  rows="4" paginator="true"  styleClass="paginated" >
+                    <p:column>
+                        <p:commandButton  id="fff" title="Voir le message"    value="#{message.idRecepteur.userName}"  style="width: 200px; text-align: left;background-color: #0D5C98;"  update=":form1" oncomplete="PF('leMessagesEnvoyeDialog').show()">
+                            <f:setPropertyActionListener value="#{message}" target="#{controllerCanal.selectedMessageFromEnvoyes}" />
+                        </p:commandButton>
+                        <h6 align="right">#{message.changeDateFormat()} </h6>
+                    </p:column>
+                </p:dataList> 
+            </p:dialog>
+            <!--fin dialog qui affiche la liste des messages envoyés-->
+            <!--dialg voir message envoye selectionne-->
+            <p:dialog   header="Message envoyé à #{controllerCanal.selectedMessageFromEnvoyes.idRecepteur.userName}" widgetVar="leMessagesEnvoyeDialog" modal="false" showEffect="fade" hideEffect="fade" resizable="false"  width="400" closeOnEscape="true"  >
+                <p:outputLabel value="#{controllerCanal.selectedMessageFromEnvoyes.contenu}"/>
+                <h6 align="right">#{controllerCanal.selectedMessageFromEnvoyes.changeDateFormat()} </h6>
+            </p:dialog>
+            <!--fin dialg voir message envoye selectionne-->
+
+            <!--dilog qui affiche la liste des messages reçus-->
+            <p:dialog header="Messages reçus" widgetVar="messagesRecusDialog" modal="false" showEffect="fade" hideEffect="fade" resizable="false" width="400" closeOnEscape="true" position="right,top" style="margin-right: 20px; margin-top: 20px;">
+                <p:dataList value="#{controllerCanal.messagesRecus}" var="message" type="unordered" itemType="none"  rows="5" paginator="true"  styleClass="paginated" >
+                    <p:column>
+                        <p:commandButton   title="Voir le message"    value="#{message.idEmetteur.userName}"  style="width: 200px; text-align: left; background-color: #0D5C98;"  update=":form1" oncomplete="PF('leMessagesRecuDialog').show()">
+                            <f:setPropertyActionListener value="#{message}" target="#{controllerCanal.selectedMessageFromRecus}" />
+                        </p:commandButton>
+                        <h6 align="right">#{message.changeDateFormat()} </h6>
+                    </p:column>
+                </p:dataList> 
+            </p:dialog>
+            <!--fin dialog-->
+            <!--dialg voir message recu selectionne-->
+            <p:dialog   header="Message reçus de #{controllerCanal.selectedMessageFromRecus.idEmetteur.userName}" widgetVar="leMessagesRecuDialog" modal="false" showEffect="fade" hideEffect="fade" resizable="false"  width="400" closeOnEscape="true"  >
+                <p:outputLabel value="#{controllerCanal.selectedMessageFromRecus.contenu}"/>
+                <h6 align="right"> #{controllerCanal.selectedMessageFromRecus.changeDateFormat()}</h6>
+            </p:dialog>
+            <!--fin dialg voir message envoye selectionne-->
+
+        </h:form>
+        <!--fintoolbar-->
+            <p:layout>
+                <p:layoutUnit position="center"  style="min-height: 500px;">
+                    <h:form>
+                    <div id="local_video" ></div>
+                    </h:form>
+                </p:layoutUnit>
+                <p:layoutUnit position="east" size="50%">
+                    <h:form>
+                    <div id="remote_video" ></div>
+                    </h:form>
+                </p:layoutUnit>
+                <p:layoutUnit position="north" style="border: 0;">
+                    <h:form>
+                        <p:commandButton value="Cliquez ici avant quitter cette page" actionListener="#{controllerCanal.quitterVideoChatPage}" style="background-color: #ff6600;" ajax="false"/>
+                    </h:form>
+                </p:layoutUnit>
+            </p:layout>
+
+
+        <h:outputScript>
+            var webrtc = new SimpleWebRTC({
+            localVideoEl: "local_video",
+            remoteVideosEl: "remote_video",
+            autoRequestMedia: true,
+
+            });
+
+            webrtc.on("readyToCall", function () {
+            webrtc.joinRoom("#{controllerCanal.membrePossesseurDeLeSessionHttp.roomNumber}");
+            });
+
+        </h:outputScript>
+
+    </h:body>
+</html>
+

@@ -1,0 +1,13 @@
+.ui-layout-north .ui-layout-unit-content {  
+    background-color: #999999; 
+    font-size:90% !important;
+} 
+
+.ui-layout-east .ui-layout-unit-content {  
+    background-color:red; 
+        font-size:90% !important;
+} 
+
+.ab{
+    background-color: blue !important ;
+}

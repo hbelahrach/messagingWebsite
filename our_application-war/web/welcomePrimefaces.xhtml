@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>HSY web chat</title>
+        <script type="text/javascript">
+            window.onload = function () {
+                var e = document.getElementById("refreshed");
+                if (e.value === "no")
+                    e.value = "yes";
+                else {
+                    e.value = "no";
+                    location.reload();
+                }
+            };
+        </script>    
+    </h:head>
+    <h:body > 
+        <h:outputStylesheet library="css" name="welcome.css"  />
+        <input type="hidden" id="refreshed" value="no"/>
+        <br/>
+        <p:layout style="height:650px;" id="layoutt" >
+            <p:layoutUnit position="east" size="40%" style=" border: 0;"  >
+                <!--connexion-->
+                <p:tooltip />
+                <h:form id="form1"> 
+                    <p:panel rendered="#{!loginController.isConnected}" header="Connexion">  
+                        <h:panelGrid columns="3" cellpadding="5" >  
+                            <p:outputLabel for="userNameCnx" value="username"  />   
+                            <p:inputText id="userNameCnx" value="#{loginController.userName}" required="true" />
+                            <p:message for="userNameCnx" display="tooltip" />
+                            <p:outputLabel for="passwordCnx" value="password"  />   
+                            <p:password id="passwordCnx" value="#{loginController.password}" required="true" />
+                            <p:message for="passwordCnx" display="tooltip"/>
+                        </h:panelGrid>  
+                        <p:commandButton value="Se connecter" id="btnSeConnecter" actionListener="#{loginController.methodeSeConnecter}" ajax="false"  style="background-color: #339900; "  /> 
+                    </p:panel> 
+
+                    <p:panel rendered="#{loginController.isConnected}"> 
+                        <h:panelGrid columns="1" cellpadding="5"> 
+                            <p:outputLabel for="userNameCnx" value="Vous êtes connecté avec #{loginController.userName}" style="font-size: 17px; color: #66cc00;" />   
+                            <p:commandButton value="Se déconnecter" id="btnSeDeConnecter" actionListener="#{logoutController.logout}" ajax="false"  style="background-color: #339900; "  /> 
+                        </h:panelGrid>
+                    </p:panel> 
+
+                </h:form>
+                <!--fin connexion-->
+                
+                <br/><br/><br/>
+
+                <!-- inscription-->
+                <p:tooltip />
+                <h:form id="fogbnqkqjvjnk">
+                    <p:growl id="msgs" showDetail="true"  />
+                    <p:panel header="Inscription"  >
+                        <h:panelGrid columns="3" cellpadding="5"  >
+                            <h:outputLabel for="userName" value="username *" />
+                            <p:inputText id="userName" value="#{registerController.membre.userName}" label="userName" required="true" />
+                            <p:message for="userName" display="tooltip" />
+
+                            <h:outputLabel for="email" value="email *"  />
+                            <p:inputText id="email" type="email" value="#{registerController.membre.email}" label="email" required="true"/>
+                            <p:message for="email" display="tooltip" />
+
+                            <h:outputLabel for="password" value="password *" />
+                            <p:password id="password" value="#{registerController.membre.password}" label="password" required="true"/>
+                            <p:message for="password" display="tooltip" />
+
+                            <h:outputLabel for="confirPassword" value="password *" />
+                            <p:password id="confirPassword" value="#{registerController.membre.confirPassword}" label="confirPassword" required="true"/>
+                            <p:message for="confirPassword" display="tooltip" />
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="5" cellpadding="3"  >
+                            <h:outputLabel value="vous êtes :" />
+                            &nbsp;&nbsp;
+                            <p:selectBooleanCheckbox value="#{registerController.femme}" itemLabel="Femme" />
+                            <p:selectBooleanCheckbox value="#{registerController.homme}" itemLabel="Homme" />
+                        </h:panelGrid>
+                        <p:commandButton value="Inscrivez-vous"  id="Inscriptionnlm" actionListener="#{registerController.add}" ajax="false"  style="background-color: #339900;"/>  
+                    </p:panel>
+                </h:form>              
+                <!-- fin inscription-->
+
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center" style="border: 0;">
+                <img src="resources/images/logo.jpg" alt="" style="width: 98%; height: 98%;"/>
+            </p:layoutUnit>
+
+        </p:layout>
+
+    </h:body>  
+
+</html>
